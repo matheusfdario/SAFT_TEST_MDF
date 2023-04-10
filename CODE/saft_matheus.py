@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding, utf-8 -*-
 
+#normal coment
+#* highlighted coment
+#! important coment
+#? question coment
+#TODO urgent coments
+
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.io
