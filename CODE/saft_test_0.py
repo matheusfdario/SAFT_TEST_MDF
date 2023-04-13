@@ -37,6 +37,7 @@ def saft(g, x, z, cl, T):
         for i in range(nz):
             tdelay = 2 * z[i] / cl  # Cálculo do atraso em função da posição
             tdelay_idx = int(tdelay / T)  # Índice do atraso no vetor de tempo
+            
             if tdelay_idx >= 0 and tdelay_idx < nx:
                 f[i, j] = g[i, tdelay_idx]
 

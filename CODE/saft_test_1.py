@@ -16,28 +16,32 @@ z = cl * t / 2  # Conversão para posição /2->ida/volta
 x = mat["ptAco40dB_1"]["CscanData"][0][0]["X"][0][0] * 1e-3  # Posições transdut
 
 def saft(g, x, z, cl, T):
-    nz, nx = g.shape
-    print(nx,nz)
-    nz = len(z)  # number of elements in z
-    f = np.zeros((nz, nx))  # initialize the output matrix f
-    maxval = 0
-    for a in range(g.shape[0]):
-        for b in range(g.shape[1]):
-            if(maxval<g[a,b]):
-                maxval=g[a,b]
-    print(maxval)
-    for i in range(nx):  # fix loop variable to iterate only up to nx
-        for j in range(nx):
-            for k in range(nx):
-                d = np.sqrt((x[k] - x[i])**2 + z[j]**2)  # compute distance
-                tdelay = 2 * d / cl  # compute time delay
-                tdelay_idx = int(tdelay / T)  # compute index in g for time delay
-                #print(g)
-                #for s in range()
-                if tdelay_idx < nz:  # ensure index is within bounds of g
-                    f[i, j] = f[i,j] + g[j,tdelay_idx]  # perform SAFT
+    cont = 0
+    nx = len(x)
+    nz = len(z)
+    nxt = len(x)  # number of elements in z
+    f = np.zeros((nzg, nxg))  # initialize the output matrix f
+    #print(nxg,nzg,nxt,g[0][1],x[0],x[1])
+    
+    for i in range(nxg):  # fix loop variable to iterate only up to nx
+        for j in range(nzg):
+            for k in range(nxt):
+                #print("1-",k,i,j)
 
+                XT = x[k]
+                X0 = g[j][i]
+                Z0 = z[j]
+                td = int(2*((np.sqrt((XT - X0)**2 + Z0**2))/cl))  # compute distance
+                #print("2-",x[k],g[j][i],z[j],td)
+                #print("f",abs(g[j][i]-td))
+                if(abs(g[j][i]-td)==0):    
+                    #print("f",cont,abs(g[j][i]-td))
+                    cont=cont+1
+                    f[j,i] = f[j,i] + g[j,i]
     return f
+
+f = saft(g, x, z, cl, T)
+
 
 plt.figure()
 plt.imshow(g, aspect="auto")

@@ -1,16 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding, utf-8 -*-
 
-#normal coment
-#* highlighted coment
-#! urgent coment
-#? question coment
-#TODO important coments
-
-#? Ultrassonic cristals? piezoelectric effect?
-#? 1984? Almost 30 years? why?
-#? A-scan?B-scan?what is this?
-
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.io
@@ -30,44 +20,27 @@ T = t[1][0]-t[0][0]  # Período de amostragem
 z = cl*t/2  # Conversação para posição /2->ida/volta
 x = mat["ptAco40dB_1"]["CscanData"][0][0]["X"][0][0]*1e-3  # Posições transdut
 
-
-#print("Amostra inicial dos A-Scan:",pi)
-#print("# Amostra final dos A-Scan:",pf)
 def saft(g, x, z, cl, T):
-    f = np.zeros_like(g)
-    # Completar
-    return f
+    cont_add = 0
+    N = len(x)
+    Nz = len(z)
+    
+    f = np.zeros((Nz, N))
 
+    for i in range(N):
+        for j in range(Nz):
+            for n in range(N):
+                tau = (2 * ((x[n] - x[i]) ** 2 + z[j] ** 2)) / cl
+                tau_idx = int(np.round(tau / T))
+                f[j, i] += g[tau_idx,n]
+
+    return f
 
 plt.figure()
 plt.imshow(g, aspect="auto")
 plt.title('B-Scan -  Matheus Fortunato Dário')
-#print("Velocidade:",type(cl), cl)
-#print("Tempo:",type(t),t)
-'''
-plt.figure()
-plt.imshow(cl, aspect="auto")
-plt.title('Velocidade')
-
-plt.figure()
-plt.imshow(t, aspect="auto")
-plt.title('Velocidade')
-
-print("Período de amostragem:",T)
-print("Conversação para posição /2->ida/volta",z)
-print("Posições transdut",type(x))
-
 plt.figure()
 f = saft(g, x, z, cl, T)
 plt.imshow(f, aspect="auto")
-plt.title('SAFT')
-#? matplotlib: 1 image por time?
-'''
-#print("Conversação para posição /2->ida/volta",len(z))
-tmax = max(t)
-zmin = min(z)
-zmax = max(z)
-print(zmin,zmax,tmax)
-#print(cl)
-#print("Posições transdut",len(x))
+plt.title('SAFT -  Matheus Fortunato Dário')
 plt.show()
