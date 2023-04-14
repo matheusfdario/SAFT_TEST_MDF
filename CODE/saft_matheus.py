@@ -21,19 +21,18 @@ z = cl*t/2  # Conversação para posição /2->ida/volta
 x = mat["ptAco40dB_1"]["CscanData"][0][0]["X"][0][0]*1e-3  # Posições transdut
 
 def saft(g, x, z, cl, T):
-    cont_add = 0
     N = len(x)
     Nz = len(z)
-    
     f = np.zeros((Nz, N))
 
     for i in range(N):
         for j in range(Nz):
             for n in range(N):
-                tau = (2 * ((x[n] - x[i]) ** 2 + z[j] ** 2)) / cl
+                tau = (2 * np.sqrt((x[n] - x[i]) ** 2 + z[j] ** 2)) / cl
                 tau_idx = int(np.round(tau / T))
-                f[j, i] += g[tau_idx,n]
-
+                tau_idx = tau_idx-pi
+                if(tau_idx<399):
+                    f[j, i] += g[tau_idx,n]
     return f
 
 plt.figure()
